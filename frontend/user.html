@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fall-risk Assessment</title>
+    <link rel="stylesheet" href="./css/assessment.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <img src="logo.png" alt="logo">
+            </div>
+            <nav>
+                <a href="http://localhost:8001">
+                  <span data-lang="en">Dashboard</span>
+                  <span data-lang="cn" style="display: none;">仪表板</span>
+                  <span data-lang="my" style="display: none;">Papan Pemuka</span>
+                </a>
+                <a href="http://localhost:8002" class="active">
+                  <span data-lang="en">Fall-risk assessment</span>
+                  <span data-lang="cn" style="display: none;">跌倒风险评估</span>
+                  <span data-lang="my" style="display: none;">Penilaian risiko jatuh</span>
+                </a>
+                <a href="http://localhost:8003">
+                  <span data-lang="en">Medication Reminders</span>
+                  <span data-lang="cn" style="display: none;">用药提醒</span>
+                  <span data-lang="my" style="display: none;">Peringatan Ubat</span>
+                </a>
+                <a href="http://localhost:8000">
+                  <span data-lang="en">Logout</span>
+                  <span data-lang="cn" style="display: none;">登出</span>
+                  <span data-lang="my" style="display: none;">Log keluar</span>
+                </a>
+              </nav>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <h1>
+                    <span data-lang="en">Fall-risk Assessment</span>
+                    <span data-lang="ms" style="display: none;">Penilaian Risiko Jatuh</span>
+                    <span data-lang="zh" style="display: none;">跌倒风险评估</span>
+                </h1>
+                <!-- Language Selection -->
+                <div class="language-selector">
+                    <label for="language-select">
+                        <strong>
+                            <span data-lang="en">Select Language:</span>
+                            <span data-lang="ms" style="display: none;">Pilih Bahasa:</span>
+                            <span data-lang="zh" style="display: none;">选择语言:</span>
+                        </strong>
+                    </label>
+                    <select id="language-select" onchange="changeLanguage()">
+                       <option value="en-US">English</option>
+                       <option value="zh-CN">中文</option>
+                       <option value="ms-MY">Bahasa Melayu</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Assessment Type Selection -->
+            <div class="assessment-type-selector">
+                <button class="assessment-button active" onclick="selectAssessment('chair')">
+                    <span data-lang="en">30-Second Chair Stand</span>
+                    <span data-lang="ms" style="display: none;">Duduk Berdiri 30 Saat</span>
+                    <span data-lang="zh" style="display: none;">30秒椅子站立测试</span>
+                </button>
+                <button class="assessment-button" onclick="selectAssessment('cfs')">
+                    <span data-lang="en">Clinical Frailty Scale</span>
+                    <span data-lang="ms" style="display: none;">Skala Kelemahan Klinikal</span>
+                    <span data-lang="zh" style="display: none;">临床虚弱量表</span>
+                </button>
+                <button class="assessment-button" onclick="selectAssessment('gait')">
+                    <span data-lang="en">Gait Analysis</span>
+                    <span data-lang="ms" style="display: none;">Analisis Gait</span>
+                    <span data-lang="zh" style="display: none;">步态分析</span>
+                </button>
+                <button class="assessment-button" onclick="selectAssessment('vision')">
+                    <span data-lang="en">Vision Assessment</span>
+                    <span data-lang="ms" style="display: none;">Penilaian Penglihatan</span>
+                    <span data-lang="zh" style="display: none;">视觉评估</span>
+                  
+                <button class="assessment-button" onclick="selectAssessment('reaction')">
+                    <span data-lang="en">Reaction Assessment</span>
+                    <span data-lang="ms" style="display: none;">Penilaian Reaksi</span>
+                    <span data-lang="zh" style="display: none;">反应评估</span>
+                </button>   
+
+            </div>
+
+            <!-- Assessment Areas -->
+            <div class="assessment-area">
+                <!-- Chair Stand Test -->
+                <div id="chair-assessment" class="assessment-content active">
+                    <!-- Test Instructions -->
+                    <div class="instructions-box">
+                        <h3>
+                            <i class="fas fa-info-circle"></i> 
+                            <span data-lang="en">30-Second Chair Stand Test Instructions</span>
+                            <span data-lang="ms" style="display: none;">Arahan Ujian Berdiri Kerusi 30 Saat</span>
+                            <span data-lang="zh" style="display: none;">30秒椅子站立测试说明</span>
+                            <button class="speak-button" onclick="speakText(this)">
+                                 <i class="fas fa-volume-up"></i>
+                            </button>
+                        </h3>
+                        <ol>
+                            <li>
+                                <span data-lang="en"><strong>Setup</strong></span>
+                                <span data-lang="ms" style="display: none;"><strong>Persediaan</strong></span>
+                                <span data-lang="zh" style="display: none;"><strong>设置</strong></span>
+                                <button class="speak-button" onclick="speakText(this)">
+                                    <i class="fas fa-volume-up"></i>
+                                </button>
+                                <ul>
+                                    <li>
+                                        <span data-lang="en">Place a sturdy chair against a wall</span>
+                                        <span data-lang="ms" style="display: none;">Letakkan kerusi yang kukuh di dinding</span>
+                                        <span data-lang="zh" style="display: none;">将坚固的椅子靠墙放置</span>
+                                        <button class="speak-button" onclick="speakText(this)">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span data-lang="en">Position your phone/camera to capture full body movement</span>
+                                        <span data-lang="ms" style="display: none;">Letakkan telefon/kamera anda untuk menangkap pergerakan badan sepenuhnya</span>
+                                        <span data-lang="zh" style="display: none;">将手机/相机放置好，以捕捉整个身体的动作</span>
+                                        <button class="speak-button" onclick="speakText(this)">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span data-lang="en">Ensure the area around the chair is clear</span>
+                                        <span data-lang="ms" style="display: none;">Pastikan kawasan sekitar kerusi adalah jelas</span>
+                                        <span data-lang="zh" style="display: none;">确保椅子周围的区域是清空的</span>
+                                        <button class="speak-button" onclick="speakText(this)">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <strong>
+                                    <span data-lang="en">Starting Position:</span>
+                                    <span data-lang="ms" style="display: none;">Kedudukan Permulaan:</span>
+                                    <span data-lang="zh" style="display: none;">起始位置:</span>
+                                </strong>
+                                <button class="speak-button" onclick="speakText(this)">
+                                    <i class="fas fa-volume-up"></i>
+                                </button>
+                                <ul>
+                                    <li>
+                                        <span data-lang="en">Sit in the middle of the chair</span>
+                                        <span data-lang="ms" style="display: none;">Duduk di tengah-tengah kerusi</span>
+                                        <span data-lang="zh" style="display: none;">坐在椅子中间</span>
+                                        <button class="speak-button" onclick="speakText(this)">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span data-lang="en">Feet flat on the floor, shoulder-width apart</span>
+                                        <span data-lang="ms" style="display: none;">Kaki rata di lantai, jarak bahu</span>
+                                        <span data-lang="zh" style="display: none;">双脚平放在地板上，与肩同宽</span>
+                                        <button class="speak-button" onclick="speakText(this)">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span data-lang="en">Arms crossed against your chest</span>
+                                        <span data-lang="ms" style="display: none;">Lengan bersilang di dada anda</span>
+                                        <span data-lang="zh" style="display: none;">双臂交叉在胸前</span>
+                                        <button class="speak-button" onclick="speakText(this)">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <strong>
+                                    <span data-lang="en">Test Procedure:</span>
+                                    <span data-lang="ms" style="display: none;">Prosedur Ujian:</span>
+                                    <span data-lang="zh" style="display: none;">测试程序:</span>
+                                </strong>
+                                <button class="speak-button" onclick="speakText(this)">
+                                    <i class="fas fa-volume-up"></i>
+                                </button>
+                                <ul>
+                                    <li>
+                                        <span data-lang="en">When ready, press "Start Test"</span>
+                                        <span data-lang="ms" style="display: none;">Apabila bersedia, tekan "Mulakan Ujian"</span>
+                                        <span data-lang="zh" style="display: none;">准备好时，按 "开始测试"</span>
+                                        <button class="speak-button" onclick="speakText(this)">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span data-lang="en">On "GO", stand up completely</span>
+                                        <span data-lang="ms" style="display: none;">Apabila "GO", berdiri sepenuhnya</span>
+                                        <span data-lang="zh" style="display: none;">听到 "GO" 时，完全站起来</span>
+                                        <button class="speak-button" onclick="speakText(this)">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span data-lang="en">Then sit down completely</span>
+                                        <span data-lang="ms" style="display: none;">Kemudian duduk sepenuhnya</span>
+                                        <span data-lang="zh" style="display: none;">然后完全坐下</span>
+                                        <button class="speak-button" onclick="speakText(this)">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span data-lang="en">Repeat this for 30 seconds</span>
+                                        <span data-lang="ms" style="display: none;">Ulang selama 30 saat</span>
+                                        <span data-lang="zh" style="display: none;">重复此操作 30 秒</span>
+                                        <button class="speak-button" onclick="speakText(this)">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <strong>
+                                    <span data-lang="en">Count:</span>
+                                    <span data-lang="ms" style="display: none;">Kiraan:</span>
+                                    <span data-lang="zh" style="display: none;">计数:</span>
+                                </strong>
+                                <button class="speak-button" onclick="speakText(this)">
+                                    <i class="fas fa-volume-up"></i>
+                                </button>
+                                <ul>
+                                    <li>
+                                        <span data-lang="en">Each complete stand (up AND down) counts as one stand</span>
+                                        <span data-lang="ms" style="display: none;">Setiap bangun lengkap (naik DAN turun) dikira sebagai satu</span>
+                                        <span data-lang="zh" style="display: none;">每次完整的站立（上升和下降）算作一次</span>
+                                        <button class="speak-button" onclick="speakText(this)">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span data-lang="en">Continue for the full 30 seconds</span>
+                                        <span data-lang="ms" style="display: none;">Teruskan selama 30 saat penuh</span>
+                                        <span data-lang="zh" style="display: none;">持续完整的 30 秒</span>
+                                        <button class="speak-button" onclick="speakText(this)">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ol>
+                        <div class="safety-note">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span data-lang="en">Safety Note: Stop immediately if you experience any pain or dizziness. Have someone nearby for safety if needed.</span>
+                            <span data-lang="ms" style="display: none;">Nota Keselamatan: Hentikan serta-merta jika anda mengalami kesakitan atau pening. Minta seseorang berdekatan untuk keselamatan.</span>
+                            <span data-lang="zh" style="display: none;">安全提示：如果您感到疼痛或头晕，请立即停止。如有需要，请让附近的人提供帮助。</span>
+                            <button class="speak-button" onclick="speakText(this)">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="webcam-area">
+                        <video id="chair-video" width="640" height="480" autoplay></video>
+                        <div id="timer" class="timer" style="display: none;">30</div>
+                        <button id="start-chair" class="btn">Start Chair Stand Test</button>
+                    </div>
+                    <div id="chair-results" class="assessment-result" style="display: none;">
+                        <h3>Chair Stand Test Results</h3>
+                        <p id="stand-count">Stands completed: 0</p>
+                        <p id="risk-level"></p>
+                        <div id="next-steps"></div> <!-- ✅ Added next steps section -->
+                    </div>
+                    
+                </div>
+
+                <!-- Clinical Frailty Scale -->
+                <div id="cfs-assessment" class="assessment-content">
+                    <h2>
+                        <span data-lang="en">Gait Analysis Assessment</span>
+                        <span data-lang="ms" style="display: none;">Penilaian Analisis Gaya Jalan</span>
+                        <span data-lang="zh" style="display: none;">步态分析评估</span>
+                    </h2>
+                
+                    <!-- Start Button -->
+                    <button id="start-cfs-test" class="primary-button">
+                        <span data-lang="en">Start Gait Analysis</span>
+                        <span data-lang="ms" style="display: none;">Mulakan Analisis Gaya Jalan</span>
+                        <span data-lang="zh" style="display: none;">开始步态分析</span>
+                    </button>
+                
+                    <!-- Warning Message -->
+                    <p class="warning-text">
+                        <span data-lang="en">⚠️ Clicking this button will redirect you to another page.</span>
+                        <span data-lang="ms" style="display: none;">⚠️ Mengklik butang ini akan mengarahkan anda ke halaman lain.</span>
+                        <span data-lang="zh" style="display: none;">⚠️ 点击此按钮将跳转到另一个页面。</span>
+                    </p>
+                </div>
+
+                <!-- Gait Analysis -->
+                <div id="gait-assessment" class="assessment-content">
+                    <h2>
+                        <span data-lang="en">Gait Analysis Assessment</span>
+                        <span data-lang="ms" style="display: none;">Penilaian Analisis Gaya Jalan</span>
+                        <span data-lang="zh" style="display: none;">步态分析评估</span>
+                    </h2>
+                
+                    <!-- Start Button -->
+                    <button id="start-gait-test" class="primary-button">
+                        <span data-lang="en">Start Gait Analysis</span>
+                        <span data-lang="ms" style="display: none;">Mulakan Analisis Gaya Jalan</span>
+                        <span data-lang="zh" style="display: none;">开始步态分析</span>
+                    </button>
+                
+                    <!-- Warning Message -->
+                    <p class="warning-text">
+                        <span data-lang="en">⚠️ Clicking this button will redirect you to another page.</span>
+                        <span data-lang="ms" style="display: none;">⚠️ Mengklik butang ini akan mengarahkan anda ke halaman lain.</span>
+                        <span data-lang="zh" style="display: none;">⚠️ 点击此按钮将跳转到另一个页面。</span>
+                    </p>
+                </div>
+
+                <!--Vision Assessment-->
+                <div id="vision-assessment" class="assessment-content">
+                    <div class="instructions-box">
+                        <h3>
+                            <i class="fas fa-eye"></i> 
+                            <span data-lang="en">Vision Assessment Instructions</span>
+                            <span data-lang="ms" style="display: none;">Arahan Penilaian Penglihatan</span>
+                            <span data-lang="zh" style="display: none;">视觉评估说明</span>
+                            <button class="speak-button" onclick="speakText(this)">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </h3>
+                        <ol>
+                            <li>
+                                <span data-lang="en"><strong>Setup</strong></span>
+                                <span data-lang="ms" style="display: none;"><strong>Persediaan</strong></span>
+                                <span data-lang="zh" style="display: none;"><strong>设置</strong></span>
+                                <button class="speak-button" onclick="speakText(this)">
+                                    <i class="fas fa-volume-up"></i>
+                                </button>
+                                <ul>
+                                    <li>
+                                        <span data-lang="en">Position your phone/tablet/laptop 2 feet (about 0.6 meters) away.</span>
+                                        <span data-lang="ms" style="display: none;">Letakkan telefon/tablet/komputer riba anda sejauh 2 kaki (kira-kira 0.6 meter).</span>
+                                        <span data-lang="zh" style="display: none;">将手机/平板电脑/笔记本电脑放置在 2 英尺（约 0.6 米）之外。</span>
+                                        <button class="speak-button" onclick="speakText(this)">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span data-lang="en">Ensure good lighting and avoid screen glare.</span>
+                                        <span data-lang="ms" style="display: none;">Pastikan pencahayaan yang baik dan elakkan silau skrin.</span>
+                                        <span data-lang="zh" style="display: none;">确保良好的照明并避免屏幕眩光。</span>
+                                        <button class="speak-button" onclick="speakText(this)">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <strong>
+                                    <span data-lang="en">Test Procedure:</span>
+                                    <span data-lang="ms" style="display: none;">Prosedur Ujian:</span>
+                                    <span data-lang="zh" style="display: none;">测试程序:</span>
+                                </strong>
+                                <button class="speak-button" onclick="speakText(this)">
+                                    <i class="fas fa-volume-up"></i>
+                                </button>
+                                <ul>
+                                    <li>
+                                        <span data-lang="en">Read the letters on the screen from top to bottom.</span>
+                                        <span data-lang="ms" style="display: none;">Baca huruf di skrin dari atas ke bawah.</span>
+                                        <span data-lang="zh" style="display: none;">从上到下阅读屏幕上的字母。</span>
+                                        <button class="speak-button" onclick="speakText(this)">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span data-lang="en">Click on the button 'Enter Line Number' below, and input the smallest line you can read.</span>
+                                        <span data-lang="ms" style="display: none;">Klik pada butang 'Masukkan Nombor Baris' di bawah, dan masukkan baris terkecil yang boleh anda baca.</span>
+                                        <span data-lang="zh" style="display: none;">单击下面的“输入行号”按钮，然后输入您可以读取的最小行。</span>
+                                        <button class="speak-button" onclick="speakText(this)">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <span data-lang="en">The app will evaluate your visual acuity.</span>
+                                        <span data-lang="ms" style="display: none;">Aplikasi ini akan menilai ketajaman penglihatan anda.</span>
+                                        <span data-lang="zh" style="display: none;">该应用程序将评估您的视力。</span>
+                                        <button class="speak-button" onclick="speakText(this)">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+                
+                    <div class="snellen-chart">
+                        <img src="snellen-chart.jpg" alt="Snellen Chart" class="snellen-image">
+                    </div>
+                
+                    <button class="btn" onclick="startVisionTest()">
+                        <span data-lang="en">Enter Line Number</span>
+                        <span data-lang="ms" style="display: none;">Masukkan Nombor Baris</span>
+                        <span data-lang="zh" style="display: none;">输入行号</span>
+                    </button>                    
+                
+                    <div id="vision-results" class="assessment-result" style="display: none;">
+                        <h3>Vision Test Results</h3>
+                        <p id="vision-score"></p>
+                    </div>
+                </div>  
+                
+                <div id="reaction-assessment" class="assessment-content hidden">
+                    <h2>
+                        <span data-lang="en">Reaction Time Assessment</span>
+                        <span data-lang="ms" style="display: none;">Penilaian Masa Reaksi</span>
+                        <span data-lang="zh" style="display: none;">反应时间评估</span>
+                    </h2>
+                
+                    <!-- Start Button -->
+                    <button id="start-reaction-test" class="primary-button">
+                        <span data-lang="en">Start Reaction Assessment</span>
+                        <span data-lang="ms" style="display: none;">Mulakan Penilaian Reaksi</span>
+                        <span data-lang="zh" style="display: none;">开始反应评估</span>
+                    </button>
+
+                    <!-- Warning Message -->
+                    <p class="warning-text">
+                        <span data-lang="en">⚠️ Clicking this button will redirect you to another page.</span>
+                        <span data-lang="ms" style="display: none;">⚠️ Mengklik butang ini akan mengarahkan anda ke halaman lain.</span>
+                        <span data-lang="zh" style="display: none;">⚠️ 点击此按钮将跳转到另一个页面。</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./js/assessment.js"></script>
+    <script src="./js/speech.js"></script>
+</body>
+</html>

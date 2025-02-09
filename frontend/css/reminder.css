@@ -1,0 +1,208 @@
+/* Import dashboard styles */
+@import url("dashboard.css");
+
+/* Ensure full height */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+/* Container Layout */
+.container {
+    display: flex;
+    min-height: 170vh;
+    align-items: stretch;
+}
+
+/* Popup Modal */
+.popup {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 300px;
+}
+
+.popup-content h2 {
+    margin: 0 0 10px;
+}
+
+.popup-content p {
+    font-size: 16px;
+}
+
+.popup-content button {
+    margin: 10px;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#btn-taken {
+    background: #28a745;
+    color: white;
+}
+
+#btn-taken:hover {
+    background: #218838;
+}
+
+#btn-snooze {
+    background: #dc3545;
+    color: white;
+}
+
+#btn-snooze:hover {
+    background: #c82333;
+}
+
+/* Main Content */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #fff;
+}
+
+/* Header */
+.header {
+    background: white;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.main-content h1 {
+    font-size: 2rem;
+    color: #334d8f;
+}
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+}
+
+form label {
+    font-weight: bold;
+}
+
+form input, form select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 12px;
+    background: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background 0.3s ease-in-out;
+}
+
+button:hover {
+    background: #218838;
+}
+
+/* Expiry Warning */
+#expiry-warning {
+    display: none;
+    color: white;
+    background: red;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Reminder Table */
+#reminder-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#reminder-table th, #reminder-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+    font-size: 16px;
+}
+
+#reminder-table th {
+    background-color: #334d8f;
+    color: white;
+}
+
+#reminder-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#reminder-table tbody tr:hover {
+    background-color: #e6e6e6;
+}
+
+/* Delete Button */
+.delete-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background 0.3s ease-in-out;
+}
+
+.delete-btn:hover {
+    background: #c82333;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    form {
+        max-width: 100%;
+    }
+
+    #reminder-table th, #reminder-table td {
+        font-size: 14px;
+        padding: 8px;
+    }
+}

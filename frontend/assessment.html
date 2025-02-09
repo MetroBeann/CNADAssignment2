@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="./css/dashboard.css">
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <div class="logo">
+        <img src="logo.png" alt="Living Referrals">
+      </div>
+      <nav>
+        <a href="http://localhost:8001" class="active">
+          <span data-lang="en">Dashboard</span>
+          <span data-lang="cn" style="display: none;">仪表板</span>
+          <span data-lang="my" style="display: none;">Papan Pemuka</span>
+        </a>
+        <a href="http://localhost:8002">
+          <span data-lang="en">Fall-risk assessment</span>
+          <span data-lang="cn" style="display: none;">跌倒风险评估</span>
+          <span data-lang="my" style="display: none;">Penilaian risiko jatuh</span>
+        </a>
+        <a href="http://localhost:8003">
+          <span data-lang="en">Medication Reminders</span>
+          <span data-lang="cn" style="display: none;">用药提醒</span>
+          <span data-lang="my" style="display: none;">Peringatan Ubat</span>
+        </a>
+        <a href="http://localhost:8000">
+          <span data-lang="en">Logout</span>
+          <span data-lang="cn" style="display: none;">登出</span>
+          <span data-lang="my" style="display: none;">Log keluar</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="main-content">
+      <div class="header">
+        <h1>
+          <span data-lang="en">Dashboard</span>
+          <span data-lang="cn" style="display: none;">仪表板</span>
+          <span data-lang="my" style="display: none;">Papan Pemuka</span>
+        </h1>
+        <div class="user-info">
+          <h2><a href="account.html" class="user-link">Kim Tan</a></h2>
+          <p>
+            <span data-lang="en">Patient ID: 2345</span>
+            <span data-lang="cn" style="display: none;">病人编号: 2345</span>
+            <span data-lang="my" style="display: none;">ID Pesakit: 2345</span>
+          </p>
+          <p>
+            <span data-lang="en">Primary Care: Dr. Sarah Smith</span>
+            <span data-lang="cn" style="display: none;">主治医生: Dr. Sarah Smith</span>
+            <span data-lang="my" style="display: none;">Penjagaan utama: Dr. Sarah Smith</span>
+          </p>
+        </div>
+
+        <!-- Language Selection -->
+        <label for="language-selector"><strong>
+          <span data-lang="en">Select Language:</span>
+          <span data-lang="cn" style="display: none;">选择语言:</span>
+          <span data-lang="my" style="display: none;">Pilih Bahasa:</span>
+        </strong></label>
+        <select id="language-selector" onchange="changeLanguage()">
+          <option value="en">English</option>
+          <option value="cn">中文</option>
+          <option value="my">Bahasa Melayu</option>
+        </select>
+      </div>
+
+      <div class="sections">
+        <div class="section">
+          <h2>
+            <span data-lang="en">Upcoming Appointments</span>
+            <span data-lang="cn" style="display: none;">即将到来的预约</span>
+            <span data-lang="my" style="display: none;">Janji Temu Akan Datang</span>
+          </h2>
+          <ul>
+            <li>
+              <span data-lang="en">Annual physical examination (28th Jan)</span>
+              <span data-lang="cn" style="display: none;">年度体检 (1月28日)</span>
+              <span data-lang="my" style="display: none;">Pemeriksaan fizikal tahunan (28 Jan)</span>
+            </li>
+            <li>
+              <span data-lang="en">Blood work (2nd Feb)</span>
+              <span data-lang="cn" style="display: none;">验血 (2月2日)</span>
+              <span data-lang="my" style="display: none;">Ujian darah (2 Feb)</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <h2>
+            <span data-lang="en">Health Issues</span>
+            <span data-lang="cn" style="display: none;">健康问题</span>
+            <span data-lang="my" style="display: none;">Isu Kesihatan</span>
+          </h2>
+          <ul>
+            <li>
+              <span data-lang="en">Type 2 Diabetes Mellitus (Diagnosed 2020)</span>
+              <span data-lang="cn" style="display: none;">2型糖尿病 (2020年确诊)</span>
+              <span data-lang="my" style="display: none;">Diabetes Mellitus Jenis 2 (Didiagnosis pada 2020)</span>
+            </li>
+            <li>
+              <span data-lang="en">Back Pain</span>
+              <span data-lang="cn" style="display: none;">背痛</span>
+              <span data-lang="my" style="display: none;">Sakit Belakang</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <h2>
+            <span data-lang="en">Medications</span>
+            <span data-lang="cn" style="display: none;">药物</span>
+            <span data-lang="my" style="display: none;">Ubat</span>
+          </h2>
+          <ul>
+            <li>
+              <span data-lang="en">Metformin (1000mg, Twice daily)</span>
+              <span data-lang="cn" style="display: none;">二甲双胍 (1000mg，每日两次)</span>
+              <span data-lang="my" style="display: none;">Metformin (1000mg, Dua kali sehari)</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="./js/dashboard.js"></script>
+</body>
+</html>

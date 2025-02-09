@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Clinical Frailty Scale Assessment</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --success: #22c55e;
+            --warning: #eab308;
+            --danger: #ef4444;
+            --background: #f8fafc;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: var(--background);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .assessment-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .webcam-section, .results-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .webcam-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #1e293b;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        #webcam {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1); /* This line inverts the camera horizontally */
+            -webkit-transform: scaleX(-1); /* For Safari support */
+        }
+
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: scaleX(-1); /* This line inverts the canvas overlay */
+            -webkit-transform: scaleX(-1); /* For Safari support */
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .metric-card {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        button:disabled {
+            background: var(--secondary);
+            cursor: not-allowed;
+        }
+
+        .results-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .frailty-score {
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 2rem 0;
+            color: var(--primary);
+        }
+
+        .recommendations {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        #movementGuide {
+            text-align: center;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #dbeafe;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .assessment-complete {
+            text-align: center;
+            padding: 2rem;
+            background: #dcfce7;
+            border-radius: 8px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .assessment-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+            .timer {
+            font-size: 1.5rem;
+            text-align: center;
+            margin: 1rem 0;
+            color: var(--primary);
+        }
+        
+        .movement-timer {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 1rem 0;
+            color: var(--primary);
+        }
+
+        .preparation-text {
+            background: #fef3c7;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .back-button {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #2563eb;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    z-index: 100;
+}
+
+.back-button:hover {
+    background-color: #1d4ed8;
+}
+
+.back-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+    </style>
+</head>
+<body>
+    <a href="http://localhost:8002" class="back-button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back
+    </a>
+    <div class="container">
+        <div class="header">
+            <h1>Advanced Clinical Frailty Scale Assessment</h1>
+            <p>Using AI-powered motion analysis for objective frailty assessment</p>
+        </div>
+
+        <div class="assessment-container">
+            <div class="webcam-section">
+                <h2>Movement Analysis</h2>
+                <div class="webcam-container">
+                    <video id="webcam" autoplay playsinline></video>
+                    <canvas id="canvas"></canvas>
+                </div>
+                <div id="movementGuide">
+                    Please follow the movement instructions
+                </div>
+                <div class="metrics">
+                    <div class="metric-card">
+                        <div>Movement Speed</div>
+                        <div class="metric-value" id="speedMetric">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div>Range of Motion</div>
+                        <div class="metric-value" id="rangeMetric">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div>Balance Score</div>
+                        <div class="metric-value" id="balanceMetric">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div>Stability</div>
+                        <div class="metric-value" id="stabilityMetric">0</div>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button id="startAssessment">Start Assessment</button>
+                    <button id="stopAssessment" disabled>Stop Assessment</button>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <h2>Assessment Results</h2>
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" id="assessmentProgress"></div>
+                </div>
+                <div class="frailty-score" id="frailtyScore">-</div>
+                <div class="recommendations" id="recommendations">
+                    Complete the movement assessment to receive your Clinical Frailty Scale score and recommendations.
+                </div>
+                <div class="assessment-complete" id="assessmentComplete">
+                    <h3>Assessment Complete!</h3>
+                    <p>Your results have been analyzed and scored.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class MotionAnalyzer {
+    constructor() {
+        // DOM elements
+        this.video = document.getElementById('webcam');
+        this.canvas = document.getElementById('canvas');
+        this.ctx = this.canvas.getContext('2d');
+        
+        // Analysis state
+        this.previousFrame = null;
+        this.frameCount = 0;
+        this.lastProcessedTime = 0;
+        this.processingInterval = 1000 / 30; // Process 30 frames per second
+        this.analysisLoop = null; // Store requestAnimationFrame ID
+        
+        // Metrics state
+        this.metrics = {
+            speed: 0,
+            range: 0,
+            balance: 0,
+            stability: 0
+        };
+        
+        // Movement history for smoothing (stores last 10 readings)
+        this.movementHistory = {
+            speed: Array(10).fill(0),
+            range: Array(10).fill(0),
+            balance: Array(10).fill(0),
+            stability: Array(10).fill(0)
+        };
+        
+        // Assessment state
+        this.movementPhase = 0;
+        this.isAssessing = false;
+        this.assessmentProgress = 0;
+        this.baselineMovement = null;
+        this.maxMovement = null;
+        
+        // Timing configurations
+        this.preparationTime = 10; // 10 seconds preparation
+        this.movementDuration = 30; // 30 seconds per movement
+        this.restDuration = 15; // 15 seconds rest
+        this.currentTimer = 0;
+        this.isPreparation = true;
+        this.isResting = false;
+        this.timerInterval = null;
+        
+        // Data collection for analysis
+        this.movementData = {
+            speed: [],
+            range: [],
+            balance: [],
+            stability: []
+        };
+        
+        // Phase data storage
+        this.phaseAverages = [];
+    }
+
+    async initialize() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { 
+                    width: { ideal: 640 },
+                    height: { ideal: 480 },
+                    frameRate: { ideal: 30 }
+                } 
+            });
+            
+            this.video.srcObject = stream;
+            this.stream = stream; // Store stream reference
+            
+            this.video.addEventListener('loadedmetadata', () => {
+                this.canvas.width = this.video.videoWidth;
+                this.canvas.height = this.video.videoHeight;
+                console.log('Video dimensions:', this.canvas.width, 'x', this.canvas.height);
+            });
+        } catch (error) {
+            console.error('Error accessing webcam:', error);
+            this.handleWebcamError(error);
+        }
+    }
+
+    handleWebcamError(error) {
+        const errorMessages = {
+            NotFoundError: "No webcam device found. Please connect a camera.",
+            NotAllowedError: "Camera access denied. Please allow camera access in your browser settings.",
+            NotReadableError: "Camera is in use by another application. Please close other apps using the camera.",
+            OverconstrainedError: "No suitable camera found. Try using a different camera.",
+            default: "An error occurred while accessing the camera. Please try again."
+        };
+
+        const message = errorMessages[error.name] || errorMessages.default;
+        const movementGuide = document.getElementById('movementGuide');
+        movementGuide.innerHTML = `
+            <div style="color: red; padding: 1rem; background: #fee2e2; border-radius: 8px;">
+                <strong>Camera Error:</strong><br>
+                ${message}
+            </div>
+        `;
+    }
+
+    startAssessment() {
+        this.isAssessing = true;
+        this.assessmentProgress = 0;
+        this.movementPhase = 0;
+        this.isPreparation = true;
+        this.currentTimer = this.preparationTime;
+        this.resetMovementData();
+        this.startTimer();
+        this.updateMovementGuide();
+        
+        // Reset analysis state
+        this.previousFrame = null;
+        this.baselineMovement = null;
+        this.maxMovement = null;
+        
+        // Start analysis loop
+        this.startAnalysis();
+        
+        console.log('Assessment started');
+    }
+
+    resetMovementData() {
+        this.movementData = {
+            speed: [],
+            range: [],
+            balance: [],
+            stability: []
+        };
+        Object.keys(this.movementHistory).forEach(key => {
+            this.movementHistory[key] = Array(10).fill(0);
+        });
+    }
+
+    startTimer() {
+        // Clear any existing timer
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+        }
+
+        this.timerInterval = setInterval(() => {
+            if (!this.isAssessing) {
+                clearInterval(this.timerInterval);
+                return;
+            }
+
+            this.currentTimer--;
+            this.updateTimerDisplay();
+
+            if (this.currentTimer <= 0) {
+                if (this.isPreparation) {
+                    this.isPreparation = false;
+                    this.currentTimer = this.movementDuration;
+                    this.startAnalysis(); // Restart analysis after preparation
+                } else if (this.isResting) {
+                    this.isResting = false;
+                    this.movementPhase++;
+                    this.currentTimer = this.movementDuration;
+                    if (this.movementPhase >= 4) {
+                        this.stopAssessment();
+                        clearInterval(this.timerInterval);
+                        return;
+                    }
+                    this.startAnalysis(); // Restart analysis after rest
+                } else {
+                    this.isResting = true;
+                    this.currentTimer = this.restDuration;
+                    this.savePhaseData();
+                    this.stopAnalysis(); // Stop analysis during rest
+                }
+                this.updateMovementGuide();
+            }
+        }, 1000);
+    }
+
+    startAnalysis() {
+        // Clear any existing analysis loop
+        if (this.analysisLoop) {
+            cancelAnimationFrame(this.analysisLoop);
+        }
+        
+        // Reset analysis state
+        this.previousFrame = null;
+        this.lastProcessedTime = 0;
+        
+        // Start new analysis loop
+        const analyzeFrame = () => {
+            if (!this.isAssessing || this.isPreparation || this.isResting) {
+                return;
+            }
+
+            const currentTime = performance.now();
+            const timeDelta = currentTime - this.lastProcessedTime;
+
+            if (timeDelta >= this.processingInterval) {
+                this.ctx.drawImage(this.video, 0, 0);
+                const currentFrame = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+
+                if (this.previousFrame) {
+                    const movement = this.detectMovement(currentFrame, this.previousFrame);
+                    this.updateMetrics(movement);
+                }
+
+                this.previousFrame = currentFrame;
+                this.lastProcessedTime = currentTime;
+                this.updateProgress();
+            }
+
+            this.analysisLoop = requestAnimationFrame(analyzeFrame);
+        };
+
+        analyzeFrame();
+    }
+
+    stopAnalysis() {
+        if (this.analysisLoop) {
+            cancelAnimationFrame(this.analysisLoop);
+            this.analysisLoop = null;
+        }
+    }
+
+    stopAssessment() {
+        this.isAssessing = false;
+        if (!this.isResting) {
+            this.savePhaseData();
+        }
+        
+        // Clean up
+        this.stopAnalysis();
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+        }
+        
+        this.calculateFrailtyScore();
+        console.log('Assessment stopped');
+    }
+
+    savePhaseData() {
+        const calculateAverage = arr => arr.length ? 
+            arr.reduce((a, b) => a + b) / arr.length : 0;
+        
+        const phaseAverages = {
+            speed: calculateAverage(this.movementData.speed),
+            range: calculateAverage(this.movementData.range),
+            balance: calculateAverage(this.movementData.balance),
+            stability: calculateAverage(this.movementData.stability)
+        };
+
+        this.phaseAverages.push(phaseAverages);
+        console.log('Phase data saved:', phaseAverages);
+        
+        this.resetMovementData();
+    }
+
+    updateTimerDisplay() {
+        const timerElement = document.getElementById('movementTimer');
+        if (!timerElement) {
+            const timerDiv = document.createElement('div');
+            timerDiv.id = 'movementTimer';
+            timerDiv.className = 'movement-timer';
+            document.querySelector('.webcam-section').insertBefore(
+                timerDiv,
+                document.getElementById('movementGuide')
+            );
+        }
+        document.getElementById('movementTimer').textContent = 
+            `${Math.floor(this.currentTimer / 60)}:${(this.currentTimer % 60).toString().padStart(2, '0')}`;
+    }
+
+    updateMovementGuide() {
+        const guides = [
+            "Stand straight and raise your arms slowly to shoulder height, then lower them",
+            "Keeping your posture, turn your head slowly from side to side",
+            "If you feel stable, perform a gentle walking motion in place",
+            "If safe and with support nearby, perform a slow sit-to-stand motion"
+        ];
+
+        const movementGuide = document.getElementById('movementGuide');
+        
+        if (this.isPreparation) {
+            movementGuide.innerHTML = `
+                <div class="preparation-text">
+                    <strong>Preparing for: ${guides[this.movementPhase]}</strong><br>
+                    Take your time to get into a comfortable position.<br>
+                    Ensure you have support nearby if needed.
+                </div>
+            `;
+        } else if (this.isResting) {
+            movementGuide.innerHTML = `
+                <div class="preparation-text">
+                    <strong>Rest Period</strong><br>
+                    Take a moment to rest before the next movement.<br>
+                    Next movement: ${guides[this.movementPhase + 1] || "Assessment complete"}
+                </div>
+            `;
+        } else {
+            movementGuide.innerHTML = `
+                <strong>Current Movement:</strong><br>
+                ${guides[this.movementPhase]}<br>
+                <small>Perform this movement slowly and carefully within your comfort level</small>
+            `;
+        }
+    }
+
+    detectMovement(current, previous) {
+        const movement = {
+            amount: 0,
+            regions: new Array(9).fill(0),
+            verticalChange: 0,
+            horizontalChange: 0,
+            centerMass: { x: 0, y: 0 }
+        };
+
+        const width = this.canvas.width;
+        const height = this.canvas.height;
+        const regionWidth = Math.floor(width / 3);
+        const regionHeight = Math.floor(height / 3);
+
+        let totalPixelChanges = 0;
+        let weightedX = 0;
+        let weightedY = 0;
+        
+        // Analyze each pixel with reduced sampling for performance
+        const samplingRate = 4; // Check every 4th pixel
+        
+        for (let y = 0; y < height; y += samplingRate) {
+            for (let x = 0; x < width; x += samplingRate) {
+                const i = (y * width + x) * 4;
+                
+                // Calculate pixel difference using RGB values
+                const rDiff = Math.abs(current.data[i] - previous.data[i]);
+                const gDiff = Math.abs(current.data[i + 1] - previous.data[i + 1]);
+                const bDiff = Math.abs(current.data[i + 2] - previous.data[i + 2]);
+                
+                const diff = (rDiff + gDiff + bDiff) / 3;
+                
+                if (diff > 25) { // Threshold for movement detection
+                    totalPixelChanges++;
+                    
+                    // Calculate region
+                    const regionX = Math.floor(x / regionWidth);
+                    const regionY = Math.floor(y / regionHeight);
+                    const regionIndex = regionY * 3 + regionX;
+                    
+                    movement.regions[regionIndex] += diff;
+                    
+                    // Track center of mass
+                    weightedX += x * diff;
+                    weightedY += y * diff;
+                }
+            }
+        }
+
+        if (totalPixelChanges > 0) {
+            movement.centerMass.x = weightedX / totalPixelChanges;
+            movement.centerMass.y = weightedY / totalPixelChanges;
+            movement.amount = totalPixelChanges / ((width * height) / (samplingRate * samplingRate));
+        }
+
+        // Calculate vertical and horizontal distribution of movement
+        for (let i = 0; i < 9; i++) {
+            const row = Math.floor(i / 3);
+            const col = i % 3;
+            
+            movement.verticalChange += movement.regions[i] * row;
+            movement.horizontalChange += movement.regions[i] * col;
+        }
+
+        return movement;
+    }
+
+    updateMetrics(movement) {
+        // Calculate instantaneous metrics
+        const instantMetrics = {
+            speed: this.calculateSpeed(movement),
+            range: this.calculateRange(movement),
+            balance: this.calculateBalance(movement),
+            stability: this.calculateStability(movement)
+        };
+
+        // Update moving averages for smoothing
+        Object.keys(instantMetrics).forEach(metric => {
+            this.movementHistory[metric].shift();
+            this.movementHistory[metric].push(instantMetrics[metric]);
+            
+            // Calculate smoothed value
+            this.metrics[metric] = this.calculateSmoothedValue(this.movementHistory[metric]);
+            
+            // Store metrics for the current phase
+            this.movementData[metric].push(this.metrics[metric]);
+        });
+
+        this.updateMetricDisplay();
+    }
+
+    calculateSpeed(movement) {
+        const currentTime = performance.now();
+        const timeDelta = currentTime - this.lastProcessedTime;
+        
+        // Calculate instantaneous speed
+        const instantaneousSpeed = (movement.amount * 1000) / timeDelta;
+        
+        // Calibrate maximum speed if needed
+        if (this.maxMovement === null || instantaneousSpeed > this.maxMovement) {
+            this.maxMovement = instantaneousSpeed;
+        }
+        
+        // Scale to 0-100 range based on maximum observed speed
+        const normalizedSpeed = this.maxMovement ? 
+            (instantaneousSpeed / this.maxMovement) * 100 : 0;
+            
+        return Math.min(100, normalizedSpeed);
+    }
+
+    calculateRange(movement) {
+        // Calculate active regions and their intensity
+        const activeRegions = movement.regions.filter(r => r > 0).length;
+        const coverage = activeRegions / 9;
+        
+        const maxRegionValue = Math.max(...movement.regions);
+        const minRegionValue = Math.min(...movement.regions.filter(r => r > 0) || [0]);
+        const rangeIntensity = maxRegionValue > 0 ? 
+            (maxRegionValue - minRegionValue) / maxRegionValue : 0;
+        
+        // Combine coverage and intensity for final range score
+        return Math.min(100, (coverage * 50 + rangeIntensity * 50));
+    }
+
+    calculateBalance(movement) {
+        if (movement.amount < 0.01) return 100; // Perfect balance for minimal movement
+        
+        // Calculate balance based on center of mass position and movement distribution
+        const centerDeviation = Math.sqrt(
+            Math.pow((movement.centerMass.x / this.canvas.width - 0.5), 2) +
+            Math.pow((movement.centerMass.y / this.canvas.height - 0.5), 2)
+        );
+        
+        // Calculate movement symmetry
+        const leftSide = movement.regions[0] + movement.regions[3] + movement.regions[6];
+        const rightSide = movement.regions[2] + movement.regions[5] + movement.regions[8];
+        const symmetryScore = 1 - Math.abs(leftSide - rightSide) / Math.max(leftSide, rightSide, 1);
+        
+        // Combine center deviation and symmetry for final balance score
+        const balanceScore = (1 - centerDeviation) * 70 + symmetryScore * 30;
+        return Math.max(0, Math.min(100, balanceScore));
+    }
+
+    calculateStability(movement) {
+        if (movement.amount < 0.01) return 100; // Perfect stability for minimal movement
+        
+        // Calculate temporal stability (consistency of movement)
+        const movementVariance = this.calculateVariance(this.movementHistory.speed);
+        const temporalStability = Math.max(0, 1 - (movementVariance / 100));
+        
+        // Calculate spatial stability (smoothness of movement distribution)
+        const regionVariance = this.calculateVariance(movement.regions.filter(r => r > 0));
+        const spatialStability = Math.max(0, 1 - (regionVariance / Math.max(...movement.regions)));
+        
+        // Combine temporal and spatial stability
+        const stabilityScore = temporalStability * 60 + spatialStability * 40;
+        return Math.max(0, Math.min(100, stabilityScore));
+    }
+
+    calculateSmoothedValue(values) {
+        const weights = values.map((_, i) => i + 1); // More recent values have higher weights
+        const weightSum = weights.reduce((a, b) => a + b, 0);
+        
+        return values.reduce((sum, value, i) => sum + (value * weights[i]), 0) / weightSum;
+    }
+
+    calculateVariance(array) {
+        if (array.length === 0) return 0;
+        const mean = array.reduce((a, b) => a + b, 0) / array.length;
+        return array.reduce((sq, n) => sq + Math.pow(n - mean, 2), 0) / array.length;
+    }
+
+    updateMetricDisplay() {
+        const formatValue = value => Math.round(value * 10) / 10; // Round to 1 decimal place
+        
+        document.getElementById('speedMetric').textContent = formatValue(this.metrics.speed);
+        document.getElementById('rangeMetric').textContent = formatValue(this.metrics.range);
+        document.getElementById('balanceMetric').textContent = formatValue(this.metrics.balance);
+        document.getElementById('stabilityMetric').textContent = formatValue(this.metrics.stability);
+    }
+
+    updateProgress() {
+        if (this.isPreparation || this.isResting) return;
+        
+        const totalMovements = 4;
+        const progressPerMovement = 100 / totalMovements;
+        this.assessmentProgress = (this.movementPhase * progressPerMovement) + 
+            ((this.movementDuration - this.currentTimer) / this.movementDuration * progressPerMovement);
+        
+        document.getElementById('assessmentProgress').style.width = `${this.assessmentProgress}%`;
+    }
+
+    calculateFrailtyScore() {
+        if (!this.phaseAverages || this.phaseAverages.length === 0) {
+            console.error('No phase data available for calculation');
+            return;
+        }
+
+        // Calculate overall averages across all phases
+        const overallMetrics = {
+            speed: 0,
+            range: 0,
+            balance: 0,
+            stability: 0
+        };
+
+        this.phaseAverages.forEach(phase => {
+            overallMetrics.speed += phase.speed;
+            overallMetrics.range += phase.range;
+            overallMetrics.balance += phase.balance;
+            overallMetrics.stability += phase.stability;
+        });
+
+        // Calculate final averages
+        Object.keys(overallMetrics).forEach(key => {
+            overallMetrics[key] /= this.phaseAverages.length;
+        });
+
+        // Calculate weighted score with different weights for each metric
+        const weightedScore = (
+            overallMetrics.speed * 0.2 +
+            overallMetrics.range * 0.3 +
+            overallMetrics.balance * 0.25 +
+            overallMetrics.stability * 0.25
+        ) / 100;
+
+        // Convert to Clinical Frailty Scale (1-9)
+        const cfsScore = Math.max(1, Math.min(9, Math.round(9 - (weightedScore * 8))));
+        
+        this.displayResults(cfsScore, overallMetrics);
+        console.log('Final metrics:', overallMetrics);
+        console.log('CFS Score:', cfsScore);
+    }
+
+    displayResults(score, metrics) {
+        document.getElementById('frailtyScore').textContent = score;
+        document.getElementById('assessmentComplete').style.display = 'block';
+
+        const recommendations = this.getRecommendations(score, metrics);
+        document.getElementById('recommendations').innerHTML = recommendations;
+    }
+
+    getRecommendations(score, metrics) {
+        const recommendations = {
+            1: {
+                title: "Very Fit",
+                description: "You are robust, active, energetic and motivated. You commonly exercise regularly and are among the fittest for your age.",
+                advice: "Maintain your active lifestyle with regular exercise and social activities."
+            },
+            2: {
+                title: "Well",
+                description: "You have no active disease symptoms but are less fit than category 1. You exercise or are very active occasionally.",
+                advice: "Continue regular physical activity and stay socially engaged."
+            },
+            3: {
+                title: "Managing Well",
+                description: "Your medical problems are well controlled, but you are not regularly active beyond routine walking.",
+                advice: "Consider increasing physical activity and maintain regular health check-ups."
+            },
+            4: {
+                title: "Vulnerable",
+                description: "While not dependent on others for daily help, symptoms may limit activities.",
+                advice: "Consult with healthcare provider about exercise programs and fall prevention."
+            },
+            5: {
+                title: "Mildly Frail",
+                description: "You have more evident slowing, and need help with high order activities.",
+                advice: "Recommended to start supervised exercise programs and regular monitoring."
+            },
+            6: {
+                title: "Moderately Frail",
+                description: "You need help with all outside activities and with keeping house.",
+                advice: "Regular medical follow-up and assisted living support may be beneficial."
+            },
+            7: {
+                title: "Severely Frail",
+                description: "Completely dependent for personal care, but not at high risk of dying.",
+                advice: "Requires assistance with daily activities and close medical supervision."
+            },
+            8: {
+                title: "Very Severely Frail",
+                description: "Completely dependent, approaching the end of life.",
+                advice: "Complete care support needed. Focus on comfort and quality of life."
+            },
+            9: {
+                title: "Terminally Ill",
+                description: "Approaching the end of life. Life expectancy < 6 months.",
+                advice: "Palliative care approach recommended. Focus on comfort measures."
+            }
+        };
+
+        const rec = recommendations[score];
+        return `
+            <h3>Clinical Frailty Scale Score: ${score} - ${rec.title}</h3>
+            <p><strong>Assessment:</strong> ${rec.description}</p>
+            <p><strong>Recommendation:</strong> ${rec.advice}</p>
+            <div class="metric-summary">
+                <h4>Detailed Metrics:</h4>
+                <ul>
+                    <li>Movement Speed: ${Math.round(metrics.speed)}% - ${this.getMetricDescription('speed', metrics.speed)}</li>
+                    <li>Range of Motion: ${Math.round(metrics.range)}% - ${this.getMetricDescription('range', metrics.range)}</li>
+                    <li>Balance: ${Math.round(metrics.balance)}% - ${this.getMetricDescription('balance', metrics.balance)}</li>
+                    <li>Stability: ${Math.round(metrics.stability)}% - ${this.getMetricDescription('stability', metrics.stability)}</li>
+                </ul>
+            </div>
+            <p><strong>Next Steps:</strong> Please discuss these results with your healthcare provider for a comprehensive assessment.</p>
+            <p><small>Note: This is an automated assessment tool and should not replace professional medical evaluation.</small></p>
+        `;
+    }
+
+    getMetricDescription(metric, value) {
+        const descriptions = {
+            speed: {
+                high: "Excellent movement speed",
+                medium: "Moderate movement speed",
+                low: "Reduced movement speed"
+            },
+            range: {
+                high: "Full range of motion",
+                medium: "Moderate range of motion",
+                low: "Limited range of motion"
+            },
+            balance: {
+                high: "Excellent balance control",
+                medium: "Moderate balance control",
+                low: "Reduced balance control"
+            },
+            stability: {
+                high: "Very stable movements",
+                medium: "Moderately stable movements",
+                low: "Movement instability noted"
+            }
+        };
+
+        if (value >= 80) return descriptions[metric].high;
+        if (value >= 50) return descriptions[metric].medium;
+        return descriptions[metric].low;
+    }
+}
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', () => {
+    const analyzer = new MotionAnalyzer();
+    analyzer.initialize();
+
+    // Add event listeners for the control buttons
+    document.getElementById('startAssessment').addEventListener('click', () => {
+        document.getElementById('startAssessment').disabled = true;
+        document.getElementById('stopAssessment').disabled = false;
+        analyzer.startAssessment();
+    });
+
+    document.getElementById('stopAssessment').addEventListener('click', () => {
+        document.getElementById('startAssessment').disabled = false;
+        document.getElementById('stopAssessment').disabled = true;
+        analyzer.stopAssessment();
+    });
+
+    // Add window unload listener to clean up resources
+    window.addEventListener('beforeunload', () => {
+        if (analyzer.stream) {
+            analyzer.stream.getTracks().forEach(track => track.stop());
+        }
+        if (analyzer.timerInterval) {
+            clearInterval(analyzer.timerInterval);
+        }
+        if (analyzer.analysisLoop) {
+            cancelAnimationFrame(analyzer.analysisLoop);
+        }
+    });
+});
+
+    </script>
+</body>
+</html>

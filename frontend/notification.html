@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medication Reminders</title>
+    <link rel="stylesheet" href="./css/reminder.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="logo.png" alt="Living Referrals">
+            </div>
+            <a href="http://localhost:8001"">
+                <span data-lang="en">Dashboard</span>
+                <span data-lang="cn" style="display: none;">仪表板</span>
+                <span data-lang="my" style="display: none;">Papan Pemuka</span>
+              </a>
+              <a href="http://localhost:8002">
+                <span data-lang="en">Fall-risk assessment</span>
+                <span data-lang="cn" style="display: none;">跌倒风险评估</span>
+                <span data-lang="my" style="display: none;">Penilaian risiko jatuh</span>
+              </a>
+              <a href="http://localhost:8003 class="active">
+                <span data-lang="en">Medication Reminders</span>
+                <span data-lang="cn" style="display: none;">用药提醒</span>
+                <span data-lang="my" style="display: none;">Peringatan Ubat</span>
+              </a>
+              <a href="http://localhost:8000">
+                <span data-lang="en">Logout</span>
+                <span data-lang="cn" style="display: none;">登出</span>
+                <span data-lang="my" style="display: none;">Log keluar</span>
+              </a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>
+                    <span data-lang="en">Medication Reminders</span>
+                    <span data-lang="cn" style="display: none;">用药提醒</span>
+                    <span data-lang="my" style="display: none;">Peringatan Ubat</span>
+                </h1>
+                <label for="language-selector"><strong>
+                    <span data-lang="en">Select Language:</span>
+                    <span data-lang="cn" style="display: none;">选择语言:</span>
+                    <span data-lang="my" style="display: none;">Pilih Bahasa:</span>
+                  </strong></label>
+                <select id="language-selector">
+                    <option value="en">English</option>
+                    <option value="cn">中文</option>
+                    <option value="my">Bahasa Melayu</option>
+                </select>
+            </div>
+
+            <!-- Expiry Warning -->
+            <div id="expiry-warning" style="display: none; color: white; background: red; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                ⚠ <span data-lang="en">Warning: Some medications have expired!</span>
+                <span data-lang="cn" style="display: none;">警告：某些药物已过期！</span>
+                <span data-lang="my" style="display: none;">Amaran: Beberapa ubat telah tamat tempoh!</span>
+            </div>
+
+            <!-- Add Reminder Form -->
+            <div class="sections">
+                <div class="section">
+                    <h2>
+                        <span data-lang="en">Add a Reminder</span>
+                        <span data-lang="cn" style="display: none;">添加提醒</span>
+                        <span data-lang="my" style="display: none;">Tambah Peringatan</span>
+                    </h2>
+                    <form id="reminder-form">
+                        <label for="pill-name">
+                            <span data-lang="en">Pill Name:</span>
+                            <span data-lang="cn" style="display: none;">药物名称:</span>
+                            <span data-lang="my" style="display: none;">Nama Ubat:</span>
+                        </label>
+                        <input type="text" id="pill-name" required>
+
+                        <label for="dosage">
+                            <span data-lang="en">Dosage (mg/ml):</span>
+                            <span data-lang="cn" style="display: none;">剂量 (mg/ml):</span>
+                            <span data-lang="my" style="display: none;">Dos (mg/ml):</span>
+                        </label>
+                        <input type="number" id="dosage" required>
+
+                        <label for="frequency">
+                            <span data-lang="en">Frequency:</span>
+                            <span data-lang="cn" style="display: none;">频率:</span>
+                            <span data-lang="my" style="display: none;">Kekerapan:</span>
+                        </label>
+                        <select id="frequency" required>
+                            <option value="Daily">Daily</option>
+                            <option value="Twice Daily">Twice Daily</option>
+                            <option value="Weekly">Weekly</option>
+                            <option value="Monthly">Monthly</option>
+                        </select>
+
+                        <label for="special-instructions">
+                            <span data-lang="en">Special Instructions:</span>
+                            <span data-lang="cn" style="display: none;">特殊指示:</span>
+                            <span data-lang="my" style="display: none;">Arahan Khas:</span>
+                        </label>
+                        <select id="special-instructions">
+                            <option value="None">None</option>
+                            <option value="Take with food">Take with food</option>
+                            <option value="Avoid sunlight">Avoid sunlight</option>
+                            <option value="Take before meal">Take before meal</option>
+                        </select>
+
+                        <label for="date-time">
+                            <span data-lang="en">Select Date & Time:</span>
+                            <span data-lang="cn" style="display: none;">选择日期和时间:</span>
+                            <span data-lang="my" style="display: none;">Pilih Tarikh & Masa:</span>
+                        </label>
+                        <input type="datetime-local" id="date-time" required>
+
+                        <label for="expiry-date">
+                            <span data-lang="en">Expiry Date:</span>
+                            <span data-lang="cn" style="display: none;">到期日期:</span>
+                            <span data-lang="my" style="display: none;">Tarikh Tamat Tempoh:</span>
+                        </label>
+                        <input type="date" id="expiry-date" required>
+
+                        <button type="submit">
+                            <span data-lang="en">Add Reminder</span>
+                            <span data-lang="cn" style="display: none;">添加提醒</span>
+                            <span data-lang="my" style="display: none;">Tambah Peringatan</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Reminder List -->
+                <div class="section">
+                    <h2>
+                        <span data-lang="en">Upcoming Reminders</span>
+                        <span data-lang="cn" style="display: none;">即将到来的提醒</span>
+                        <span data-lang="my" style="display: none;">Peringatan Akan Datang</span>
+                    </h2>
+                    <table id="reminder-table">
+                        <thead>
+                            <tr>
+                                <th>Pill Name</th>
+                                <th>Dosage</th>
+                                <th>Frequency</th>
+                                <th>Date & Time</th>
+                                <th>Special Instructions</th>
+                                <th>Expiry Date</th>
+                                <th>Remove Reminder</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reminder-list"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="./js/dashboard.js"></script>
+    <script src="./js/reminder.js"></script>
+</body>
+</html>

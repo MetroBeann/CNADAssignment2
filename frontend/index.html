@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Healthcare System Login</title>
+  <link rel="stylesheet" href="./css/login.css">
+  <!-- Include Supabase Client from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="logo.png" alt="logo">
+    </div>
+
+    <!-- Language Selection -->
+    <label for="language-selector"><strong>
+      <span data-lang="en">Select Language:</span>
+      <span data-lang="cn" style="display: none;">选择语言:</span>
+      <span data-lang="my" style="display: none;">Pilih Bahasa:</span>
+    </strong></label>
+    <select id="language-selector" onchange="changeLanguage()">
+      <option value="en">English</option>
+      <option value="cn">中文</option>
+      <option value="my">Bahasa Melayu</option>
+    </select>
+
+    <form class="login-form" id="loginForm">
+      <input type="text" class="input-field" id="username" placeholder="Username" 
+        data-lang-placeholder='{"en": "Username", "cn": "用户名", "my": "Nama Pengguna"}'
+        minlength="3" required>
+      <input type="password" class="input-field" id="password" placeholder="Password" 
+        data-lang-placeholder='{"en": "Password", "cn": "密码", "my": "Kata Laluan"}'
+        minlength="6" required>
+
+      <button class="btn btn-login" type="submit">
+        <span data-lang="en">Login</span>
+        <span data-lang="cn" style="display: none;">登录</span>
+        <span data-lang="my" style="display: none;">Log Masuk</span>
+      </button>
+    </form>
+
+    <!-- Error message container -->
+    <div id="errorMessage" style="color: red; margin-top: 10px; display: none;"></div>
+  </div>
+  
+  <!-- Include Language Script -->
+  <script src="./js/language.js"></script>
+
+  <!-- Login Handler Script -->
+  <script>
+    // Wait for DOM and Supabase script to load
+    window.addEventListener('load', function() {
+      // Initialize Supabase client
+      const supabaseUrl = 'https://cfzvlljfzqqqwghxemfq.supabase.co';
+      const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNmenZsbGpmenFxcXdnaHhlbWZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkwOTE1NTEsImV4cCI6MjA1NDY2NzU1MX0.5-WdbqpQv2eMzg5JXdm5V-FpHLhw50I3NM7uSGIhFaQ';
+      
+      // Create Supabase client using the global supabaseClient object
+      const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+      // Error message display function
+      function showError(message) {
+        const errorDiv = document.getElementById('errorMessage');
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+        setTimeout(() => {
+          errorDiv.style.display = 'none';
+        }, 3000);
+      }
+
+      // Handle form submission
+      document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+
+        // Client-side validation matching SQL constraints
+        if (username.length < 3) {
+          showError('Username must be at least 3 characters long');
+          return;
+        }
+
+        if (password.length < 6) {
+          showError('Password must be at least 6 characters long');
+          return;
+        }
+        
+        try {
+          // First check if username exists
+          const { data: userData, error: userError } = await supabase
+            .from('users')
+            .select('id')
+            .eq('username', username)
+            .single();
+          
+          if (userError && userError.code === 'PGRST116') {
+            // PGRST116 means no rows returned
+            showError('Username not found');
+            return;
+          }
+
+          // If username exists, check password
+          const { data: loginData, error: loginError } = await supabase
+            .from('users')
+            .select('id, username, user_type')
+            .eq('username', username)
+            .eq('password', password)
+            .single();
+          
+          if (loginError && loginError.code === 'PGRST116') {
+            showError('Incorrect password');
+            return;
+          }
+
+          if (loginError) {
+            throw loginError;
+          }
+          
+          if (loginData) {
+            // Store user data in session storage (remove password for security)
+            sessionStorage.setItem('user', JSON.stringify({
+              id: loginData.id,
+              username: loginData.username,
+              userType: loginData.user_type
+            }));
+
+            // Redirect based on user type
+            if (loginData.user_type === 'doctor') {
+              window.location.href = 'http://localhost:8001';
+            } else if (loginData.user_type === 'patient') {
+              window.location.href = 'http://localhost:8001';
+            }
+          }
+          
+        } catch (error) {
+          console.error('Error:', error.message);
+          showError('An error occurred during login');
+        }
+      });
+
+      // Clear error message when user starts typing
+      document.querySelectorAll('.input-field').forEach(input => {
+        input.addEventListener('input', () => {
+          document.getElementById('errorMessage').style.display = 'none';
+        });
+      });
+    });
+  </script>
+</body>
+</html>

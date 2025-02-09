@@ -1,0 +1,53 @@
+version: '3'
+services:
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./frontend:/usr/src/app/frontend
+    networks:
+      - app-network
+
+  assessment:
+    build: ./services/assessment
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./frontend:/usr/src/app/frontend
+    networks:
+      - app-network
+
+  user:
+    build: ./services/user
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./frontend:/usr/src/app/frontend  
+    environment:
+      - NODE_ENV=development
+      - PORT=8002
+    networks:
+      - app-network
+
+  notification:
+    build: ./services/notification
+    ports:
+      - "8003:8003"
+    volumes:
+      - ./frontend:/usr/src/app/frontend
+    networks:
+      - app-network
+
+  analytics:
+    build: ./services/analytics
+    ports:
+      - "8004:8004"
+    volumes:
+      - ./frontend:/usr/src/app/frontend  
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

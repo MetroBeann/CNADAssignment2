@@ -1,0 +1,565 @@
+/* Base styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
+  
+  /* Layout */
+  .container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  /* Sidebar styles */
+  .sidebar {
+    background-color: #334d8f;
+    color: #fff;
+    padding: 2rem;
+    width: 250px;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  
+  .logo {
+    width: 150px;
+    margin-bottom: 2rem;
+  }
+  
+  .logo img {
+    width: 100%;
+  }
+  
+  .sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .sidebar nav a {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .sidebar nav a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+  }
+  
+  .sidebar nav a.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: bold;
+  }
+  
+  /* Main content area */
+  .main-content {
+    flex: 1;
+    padding: 2rem;
+    margin-left: 300px;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .header {
+    border-bottom: 1px solid #ccc;
+    padding: 1rem 0 1.5rem 0;
+    margin-bottom: 2rem;
+  }
+  
+  .header h1 {
+    margin: 0;
+    color: #334d8f;
+    font-size: 2rem;
+  }
+  
+  /* Assessment type selector */
+  .assessment-type-selector {
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem 0;
+    gap: 1rem;
+  }
+  
+  .assessment-button {
+    flex: 1;
+    padding: 1rem;
+    font-size: 1.1rem;
+    background-color: #f4f4f4;
+    border: 2px solid #334d8f;
+    color: #334d8f;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .assessment-button:hover {
+    background-color: #e0e5f2;
+  }
+  
+  .assessment-button.active {
+    background-color: #334d8f;
+    color: white;
+  }
+  
+  /* Assessment area */
+  
+  /* Ensure only one assessment is visible at a time */
+  .assessment-content {
+    display: none;
+  }
+  
+  /* Make the active assessment visible */
+  .assessment-content.active {
+    display: block;
+  }
+  
+  .assessment-area {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+  }
+  
+  /* Assessment content */
+  .assessment-content {
+    display: none;
+    width: 100%;
+  }
+  
+  .assessment-content.active {
+    display: block;
+  }
+  
+  /* Webcam area */
+  .webcam-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 2rem;
+  }
+  
+  /* Results area */
+  .assessment-result {
+    flex: 1;
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Button styles */
+  .btn {
+    background-color: #334d8f;
+    color: #fff;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 1rem;
+  }
+  
+  .btn:hover {
+    background-color: #496bc4;
+  }
+  
+  /* Timer */
+  .timer {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 1rem 0;
+    text-align: center;
+    color: #334d8f;
+  }
+  
+  /* CFS specific styles */
+  .cfs-container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .cfs-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+  }
+  
+  .scale-item {
+    margin: 1rem 0;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .scale-item.selected {
+    border-color: #334d8f;
+    background-color: #e0e5f2;
+  }
+  
+  /* Instructions box styles */
+  .instructions-box {
+    margin: 0 0 2rem 0;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 0.5rem;
+    border-left: 4px solid #334d8f;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .instructions-box h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #334d8f;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .instructions-box ol {
+    list-style-type: decimal;
+    margin-left: 1.5rem;
+    line-height: 1.6;
+  }
+  
+  .instructions-box ul {
+    list-style-type: disc;
+    margin-left: 2rem;
+    margin-top: 0.5rem;
+  }
+  
+  .instructions-box li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .instructions-box strong {
+    color: #334d8f;
+  }
+  
+  /* Setup diagram */
+  .setup-diagram {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+  }
+  
+  .setup-diagram h4 {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .setup-diagram pre {
+    font-family: monospace;
+    line-height: 1.4;
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+  }
+  
+  /* Safety note */
+  .safety-note {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: #fff3cd;
+    border-radius: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #856404;
+  }
+  
+  /* Risk level indicators */
+  .risk-low {
+    color: #28a745;
+  }
+  
+  .risk-moderate {
+    color: #ffc107;
+  }
+  
+  .risk-high {
+    color: #dc3545;
+  }
+  
+  /* Only apply styles when #reaction-assessment is visible */
+  #reaction-assessment.active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  /* Ensure warning message only appears in Reaction Assessment */
+  #reaction-assessment.active .warning-text {
+    color: red;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+    display: block;
+  }
+  
+  /* Hide the warning message by default */
+  #reaction-assessment .warning-text {
+    display: none;
+  }
+  
+  /* Style for the Start Reaction Assessment button - Only when active */
+  #reaction-assessment.active #start-reaction-test {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 15px 30px;
+    background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Gradient for modern look */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s, box-shadow 0.3s;
+    display: block;
+    margin: 20px auto;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Hide the button by default */
+  #reaction-assessment #start-reaction-test {
+    display: none;
+  }
+  
+  /* Hover effect */
+  #reaction-assessment.active #start-reaction-test:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #ff6b81, #ffb87b);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Active (clicking) effect */
+  #reaction-assessment.active #start-reaction-test:active {
+    transform: scale(0.98);
+    background: linear-gradient(135deg, #e65c5c, #ff9a5b);
+  }
+  
+  /* Only apply styles when #gait-assessment is visible */
+#gait-assessment.active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  /* Ensure warning message only appears in Gait Assessment */
+  #gait-assessment.active .warning-text {
+    color: red;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+    display: block;
+  }
+  
+  /* Hide the warning message by default */
+  #gait-assessment .warning-text {
+    display: none;
+  }
+  
+  /* Style for the Start Gait Assessment button - Only when active */
+  #gait-assessment.active #start-gait-test {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 15px 30px;
+    background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Gradient for modern look */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s, box-shadow 0.3s;
+    display: block;
+    margin: 20px auto;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Hide the button by default */
+  #gait-assessment #start-gait-test {
+    display: none;
+  }
+  
+  /* Hover effect */
+  #gait-assessment.active #start-gait-test:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #ff6b81, #ffb87b);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Active (clicking) effect */
+  #gait-assessment.active #start-gait-test:active {
+    transform: scale(0.98);
+    background: linear-gradient(135deg, #e65c5c, #ff9a5b);
+  }
+
+  /* Clinical Frailty Scale Assessment Styles */
+#cfs-assessment.active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  /* Warning message styles when CFS assessment is active */
+  #cfs-assessment.active .warning-text {
+    color: red;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+    display: block;
+  }
+  
+  /* Hide warning message by default */
+  #cfs-assessment .warning-text {
+    display: none;
+  }
+  
+  /* Primary button styles for CFS assessment when active */
+  #cfs-assessment.active .primary-button {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 15px 30px;
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s, box-shadow 0.3s;
+    display: block;
+    margin: 20px auto;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Hide button by default */
+  #cfs-assessment .primary-button {
+    display: none;
+  }
+  
+  /* Hover effect for primary button */
+  #cfs-assessment.active .primary-button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #ff6b81, #ffb87b);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Active (clicking) effect for primary button */
+  #cfs-assessment.active .primary-button:active {
+    transform: scale(0.98);
+    background: linear-gradient(135deg, #e65c5c, #ff9a5b);
+  }
+  
+  /* Additional styles for CFS specific elements */
+  #cfs-assessment .assessment-content {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  #cfs-assessment h2 {
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2rem;
+  }
+  
+  /* Ensure consistent spacing and alignment */
+  #cfs-assessment .instructions-box {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+  
+    .sidebar {
+        width: 100%;
+        padding: 1rem;
+        position: static;
+        height: auto;
+    }
+  
+    .main-content {
+        margin-left: 0;
+        height: auto;
+    }
+  
+    .assessment-type-selector {
+        flex-direction: column;
+    }
+  
+    .assessment-button {
+        width: 100%;
+    }
+  
+    .assessment-area {
+        flex-direction: column;
+    }
+  
+    .webcam-area {
+        margin-right: 0;
+        margin-bottom: 2rem;
+    }
+  
+  
+  .speak-button {
+    background-color: #0062cc;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .speak-button:hover {
+    background-color: #004ba0;
+  }
+  }
+  
+  /* snellen chart */
+  .snellen-chart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .snellen-image {
+    width: 400px;
+    height: auto;
+  }
